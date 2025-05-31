@@ -1,34 +1,43 @@
 #include <Servo.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27,16,2);
+
+#define trigPin 11
+#define echoPin 12
+
 
 Servo myServo;
 int servoPin = 3;
-String buffer = "";
-int trigPin = 5;           //초음파 센서 trig에 달린 번호
-int echoPin = 6;           //초음파 센서 echo 에 달린 번호
 
+void setup()
+{
 
-void setup() {
-  // put your setup code here, to run once:
-  //초음파 센서
-
-  
-  Serial.begin(9600);
-  pinMode(echoPin, INPUT);   // echo 초음파 돌아옴
-  pinMode(trigPin, OUTPUT);  // trig 초음파
+  pinMode(trigPin,OUTPUT);
+  pinMode(trigPin,INPUT);
 
   myServo.attach(servoPin);
   Serial.println(myServo.attached());
 
+  Serial.begin(9600);
+  lcd.init();
+  lcd.backlight();
+
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void loop(){
+  
+
   int angle;
-  
-  int distance =   check_distance(); 
+
+  int distance_result = check_distance();
+
+  work_servo(distance_result);
   
 
+}
 
+int work_servo(int distance){
   if(distance){//1 :: 20초과 >> 쓰레기 다 차지 않은 상태 > 0도
     // 
     Serial.println("20 초과 > 아직 ㄱㅊ음");
@@ -41,7 +50,6 @@ void loop() {
     myServo.write(180);
     delay(500);           // 잠깐 유지 (0.5초 정도)
   }
-
 }
 
 int check_distance(){
@@ -61,13 +69,7 @@ int check_distance(){
   //시간을 거리로 cm단위 환산
   distance = ((duration * 340) / 10000) / 2;
 
-
-  //시리얼 모니터에 거리 출력
-  Serial.print("Distance : ");
-  Serial.print(distance);
-  Serial.println("cm\n");
-
-  delay(1000);
+  print_lcd(distance);
 
   if (distance <= 20) {//
     result = 0;
@@ -76,4 +78,22 @@ int check_distance(){
   }
 
   return result;
+}
+
+void print_lcd(int distance){
+  
+  lcd.clear();
+  lcd.setCursor(1,0);
+  
+  //확인용 print - log 느낌?
+  Serial.print("Distance : ");
+  Serial.print(distance);
+  Serial.println("cm\n");
+
+  //거리가 너무 크면 짤려서 나와염 
+  lcd.setCursor(2,1);
+  lcd.print("dis : ");
+  lcd.print(distance);
+  lcd.println("cm");
+  delay(1000);
 }
