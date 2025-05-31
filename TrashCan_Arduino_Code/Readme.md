@@ -2,7 +2,8 @@
 # 개요
 # 이미지 
 1. 2차 테스트
-  ![image](https://github.com/user-attachments/assets/8450ad46-140d-4594-b74b-fd9e4bcc62b2)
+<img src="https://github.com/user-attachments/assets/8450ad46-140d-4594-b74b-fd9e4bcc62b2"  width="400" height="500"/>
+
 - 초음파센서 + 서보모터에서 **LCD 판 추가**
 - **추후 구현 예정 : 무게감지 센서 + 소리 내는 센서 + 초음파 센서 한개 더 + wifi 모듈 추가
 
